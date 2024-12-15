@@ -1,47 +1,49 @@
 package com.example.dataorganizerpt3;
 
 public class BinarySearchTree<T extends Comparable<T>> {
-
-    private Node<T> root;
-
-    private static class Node<T> {
-        T data;
-        Node<T> left, right;
-
-        Node(T data) {
-            this.data = data;
-            this.left = this.right = null;
-        }
-    }
+    private TreeNode<T> root;
 
     public void insert(T data) {
         root = insertRec(root, data);
     }
 
-    private Node<T> insertRec(Node<T> root, T data) {
-        if (root == null) {
-            root = new Node<>(data);
-            return root;
-        }
-        if (data.compareTo(root.data) < 0) {
-            root.left = insertRec(root.left, data);
-        } else if (data.compareTo(root.data) > 0) {
-            root.right = insertRec(root.right, data);
-        }
-        return root;
+    public boolean contains(T data) {
+        return containsRec(root, data);
     }
 
-    public boolean search(T data) {
-        return searchRec(root, data);
+    private TreeNode<T> insertRec(TreeNode<T> node, T data) {
+        if (node == null) {
+            return new TreeNode<>(data);
+        }
+
+        if (data.compareTo(node.data) < 0) {
+            node.left = insertRec(node.left, data);
+        } else if (data.compareTo(node.data) > 0) {
+            node.right = insertRec(node.right, data);
+        }
+        return node;
     }
 
-    private boolean searchRec(Node<T> root, T data) {
-        if (root == null) {
+    private boolean containsRec(TreeNode<T> node, T data) {
+        if (node == null) {
             return false;
         }
-        if (data.compareTo(root.data) == 0) {
+
+        if (data.equals(node.data)) {
             return true;
         }
-        return data.compareTo(root.data) < 0 ? searchRec(root.left, data) : searchRec(root.right, data);
+
+        return data.compareTo(node.data) < 0
+                ? containsRec(node.left, data)
+                : containsRec(node.right, data);
+    }
+
+    private static class TreeNode<T> {
+        T data;
+        TreeNode<T> left, right;
+
+        TreeNode(T data) {
+            this.data = data;
+        }
     }
 }

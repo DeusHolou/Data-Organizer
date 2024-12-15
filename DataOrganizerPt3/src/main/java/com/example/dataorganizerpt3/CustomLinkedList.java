@@ -1,46 +1,63 @@
 package com.example.dataorganizerpt3;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class CustomLinkedList<T> {
     private Node<T> head;
-
-    public CustomLinkedList() {
-        head = null;
-    }
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-
-        public Node(T data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
+    private int size;
 
     public void add(T data) {
-        Node<T> newNode = new Node<>(data);
         if (head == null) {
-            head = newNode;
+            head = new Node<>(data);
         } else {
             Node<T> current = head;
             while (current.next != null) {
                 current = current.next;
             }
-            current.next = newNode;
+            current.next = new Node<>(data);
+        }
+        size++;
+    }
+
+    public void remove(T data) {
+        if (head == null) return;
+
+        if (head.data.equals(data)) {
+            head = head.next;
+            size--;
+            return;
+        }
+
+        Node<T> current = head;
+        while (current.next != null && !current.next.data.equals(data)) {
+            current = current.next;
+        }
+
+        if (current.next != null) {
+            current.next = current.next.next;
+            size--;
         }
     }
 
-    public List<T> toList() {
-        List<T> list = new ArrayList<>();
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
         Node<T> current = head;
         while (current != null) {
-            list.add(current.data);
+            sb.append(current.data).append(" -> ");
             current = current.next;
         }
-        return list;
+        return sb.length() > 0 ? sb.substring(0, sb.length() - 4) : "Empty List";
+    }
+
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+        }
     }
 }

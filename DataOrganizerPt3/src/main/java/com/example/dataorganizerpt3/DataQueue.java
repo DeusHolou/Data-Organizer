@@ -4,15 +4,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class DataQueue<T> {
-
     private Queue<T> queue;
 
     public DataQueue() {
-        this.queue = new LinkedList<>();
+        queue = new LinkedList<>();
     }
 
     public void enqueue(T data) {
-        queue.add(data);
+        queue.offer(data);
     }
 
     public T dequeue() {

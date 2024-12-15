@@ -1,53 +1,73 @@
 package com.example.dataorganizerpt3;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DataManager<T> {
-
-    private ArrayList<T> data;
+public class DataManager {
+    private final List<String> dataList;
 
     public DataManager() {
-        this.data = new ArrayList<>();
+        this.dataList = new ArrayList<>();
     }
 
-    public void addData(T dataItem) {
-        data.add(dataItem);
+    // Add new data
+    public void addData(String data) {
+        dataList.add(data);
     }
 
-    // Efficient sorting algorithm: QuickSort
+    // Edit existing data
+    public boolean editData(String oldData, String newData) {
+        int index = dataList.indexOf(oldData);
+        if (index != -1) {
+            dataList.set(index, newData);
+            return true;
+        }
+        return false;
+    }
+
+    // Delete data
+    public boolean deleteData(String data) {
+        return dataList.remove(data);
+    }
+
+    // Clear all data
+    public void clearData() {
+        dataList.clear();
+    }
+
+    // Sort data alphabetically
     public void sortData() {
-        quickSort(data, 0, data.size() - 1);
+        dataList.sort(String::compareToIgnoreCase); // Case-insensitive alphabetical sort
     }
 
-    // QuickSort algorithm with efficiency comments
-    private void quickSort(ArrayList<T> data, int low, int high) {
-        if (low < high) {
-            int pi = partition(data, low, high);
-            quickSort(data, low, pi - 1);  // Recursively sort left part
-            quickSort(data, pi + 1, high); // Recursively sort right part
-        }
-    }
-
-    private int partition(ArrayList<T> data, int low, int high) {
-        T pivot = data.get(high);
-        int i = (low - 1);
-
-        for (int j = low; j < high; j++) {
-            if (((Comparable<T>) data.get(j)).compareTo(pivot) <= 0) {
-                i++;
-                T temp = data.get(i);
-                data.set(i, data.get(j));
-                data.set(j, temp);
+    // Save data to file
+    public void saveDataToFile(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (String data : dataList) {
+                writer.write(data);
+                writer.newLine();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        T temp = data.get(i + 1);
-        data.set(i + 1, data.get(high));
-        data.set(high, temp);
-        return i + 1;
     }
 
-    public ArrayList<T> getData() {
-        return data;
+    // Load data from file
+    public void loadDataFromFile(String fileName) {
+        dataList.clear(); // Clear current data before loading new data
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                dataList.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get data as a list of strings
+    public List<String> getDataStrings() {
+        return new ArrayList<>(dataList); // Return a copy to prevent external modification
     }
 }

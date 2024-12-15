@@ -17,6 +17,6 @@ public class DataEntry<T> {
 
     @Override
     public String toString() {
-        return data.toString();  // Using toString to convert any data type to string for file operations
+        return data.toString();
     }
 }
